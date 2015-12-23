@@ -2,6 +2,7 @@ package paultr.offers.utility;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,8 +10,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import paultr.offers.R;
 import paultr.offers.model.Offer;
@@ -23,9 +24,9 @@ import paultr.offers.model.StoreLocation;
 public class DataUtil {
     private static DataUtil dataUtil = new DataUtil();
 
-    private List<Offer> offers = new ArrayList<>();
-    private List<Retailer> retailers = new ArrayList<>();
-    private List<StoreLocation> storeLocations = new ArrayList<>();
+    private Map<Integer, Offer> offers = new HashMap<>();
+    private Map<Integer, Retailer> retailers = new HashMap<>();
+    private Map<Integer, StoreLocation> storeLocations = new HashMap<>();
 
     private DataUtil() {
     }
@@ -41,8 +42,10 @@ public class DataUtil {
         try {
             JSONObject object = new JSONObject(json);
             JSONArray array = object.getJSONArray( "offers" );
+            Offer offer;
             for( int i = 0; i < array.length(); i++ ) {
-                offers.add( Offer.fromJson( array.getJSONObject( i ) ) );
+                offer = Offer.fromJson( array.getJSONObject( i ) );
+                offers.put( offer.getId(), offer );
             }
 
         } catch( JSONException e ) {}
@@ -53,8 +56,10 @@ public class DataUtil {
         try {
             JSONObject object = new JSONObject(json);
             JSONArray array = object.getJSONArray( "retailers" );
+            Retailer retailer;
             for( int i = 0; i < array.length(); i++ ) {
-                retailers.add( Retailer.fromJson( array.getJSONObject( i ) ) );
+                retailer = Retailer.fromJson( array.getJSONObject( i ) );
+                retailers.put( retailer.getId(), retailer );
             }
 
         } catch( JSONException e ) {}
@@ -65,8 +70,10 @@ public class DataUtil {
         try {
             JSONObject object = new JSONObject(json);
             JSONArray array = object.getJSONArray( "stores" );
+            StoreLocation location;
             for( int i = 0; i < array.length(); i++ ) {
-                storeLocations.add( StoreLocation.fromJson( array.getJSONObject( i ) ) );
+                location = StoreLocation.fromJson( array.getJSONObject(i) );
+                storeLocations.put( location.getId(), location );
             }
 
         } catch( JSONException e ) {}
@@ -77,17 +84,17 @@ public class DataUtil {
     }
 
     @NonNull
-    public List<Offer> getOffers() {
+    public Map<Integer, Offer> getOffers() {
         return offers;
     }
 
     @NonNull
-    public List<StoreLocation> getStoreLocations() {
+    public Map<Integer, StoreLocation> getStoreLocations() {
         return storeLocations;
     }
 
     @NonNull
-    public List<Retailer> getRetailers() {
+    public Map<Integer, Retailer> getRetailers() {
         return retailers;
     }
 

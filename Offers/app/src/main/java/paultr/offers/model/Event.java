@@ -1,5 +1,7 @@
 package paultr.offers.model;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,7 +22,7 @@ public class Event {
         //expect an actual event (i.e. enter) because events is an object, not an array in the data
         Event event = new Event();
         try {
-            if( jsonObject.getJSONObject( "enter" ) != null ) {
+            if( jsonObject.has( "enter" ) ) {
                 event.type = "enter";
 
                 JSONObject object = jsonObject.getJSONObject( "enter" );
@@ -34,7 +36,7 @@ public class Event {
             }
 
         } catch( JSONException e ) {
-
+            Log.e( "Event", "JSONException: " + e.getMessage() );
         }
 
         return null;

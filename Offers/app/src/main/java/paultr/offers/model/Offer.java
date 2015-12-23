@@ -1,6 +1,8 @@
 package paultr.offers.model;
 
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,7 +18,6 @@ public class Offer {
     private String large_url;
     private String name;
     private int[] retailers;
-    private String content;
     private String url;
     private int id;
     private boolean finished;
@@ -24,24 +25,39 @@ public class Offer {
     public static Offer fromJson(JSONObject jsonObject) {
         Offer offer = new Offer();
         try {
-            offer.description = jsonObject.getString( "description" );
-            offer.large_url = jsonObject.getString( "large_url" );
-            offer.name = jsonObject.getString( "name" );
+            if( jsonObject.has( "description" ) ) {
+                offer.description = jsonObject.getString("description");
+            }
+            if( jsonObject.has( "large_url" ) ) {
+                offer.large_url = jsonObject.getString("large_url");
+            }
 
-            JSONArray retailersArray = jsonObject.optJSONArray( "retailers" );
-            if( retailersArray != null ) {
-                offer.retailers = new int[retailersArray.length()];
-                for( int i = 0; i < retailersArray.length(); i++ ) {
-                    offer.retailers[i] = retailersArray.optInt( i );
+            if( jsonObject.has( "name" ) ) {
+                offer.name = jsonObject.getString("name");
+            }
+
+            if( jsonObject.has( "retailers" ) ) {
+                JSONArray retailersArray = jsonObject.optJSONArray("retailers");
+                if (retailersArray != null) {
+                    offer.retailers = new int[retailersArray.length()];
+                    for (int i = 0; i < retailersArray.length(); i++) {
+                        offer.retailers[i] = retailersArray.optInt(i);
+                    }
                 }
             }
 
-            offer.content = jsonObject.getString( "content" );
-            offer.url = jsonObject.getString( "url" );
+            if( jsonObject.has( "url" ) ) {
+                offer.url = jsonObject.getString("url");
+            }
+
+            if( jsonObject.has( "finished" ) ) {
+                offer.finished = jsonObject.getBoolean("finished");
+            }
+
             offer.id = jsonObject.getInt( "id" );
-            offer.finished = jsonObject.getBoolean( "finished" );
 
         } catch( JSONException e ) {
+            Log.e( "Offer", "JsonException: " + e.getMessage() );
 
         }
 
@@ -78,14 +94,6 @@ public class Offer {
 
     public void setRetailers(int[] retailers) {
         this.retailers = retailers;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     public String getUrl() {

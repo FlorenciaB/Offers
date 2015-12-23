@@ -1,18 +1,22 @@
 package paultr.offers.model;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.ClusterItem;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
  * Created by Paul on 12/22/15.
  */
-public class StoreLocation {
+public class StoreLocation implements ClusterItem {
 
     private Event event = null;
     private int id;
     private int retailer_id;
     private double latitude;
     private double longitude;
+    private LatLng location;
 
     public static StoreLocation fromJson( JSONObject jsonObject ) {
 
@@ -25,8 +29,9 @@ public class StoreLocation {
             }
 
             storeLocation.retailer_id = jsonObject.getInt( "retailer_id" );
-            storeLocation.latitude = jsonObject.getDouble("latitude");
-            storeLocation.longitude = jsonObject.getDouble( "longitude" );
+            storeLocation.latitude = jsonObject.getDouble( "lat" );
+            storeLocation.longitude = jsonObject.getDouble( "long" );
+            storeLocation.location = new LatLng( storeLocation.latitude, storeLocation.longitude );
         } catch( JSONException e ) {
 
         }
@@ -73,5 +78,10 @@ public class StoreLocation {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    @Override
+    public LatLng getPosition() {
+        return new LatLng( latitude, longitude );
     }
 }
